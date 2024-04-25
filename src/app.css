@@ -1,0 +1,68 @@
+input{
+  width: 100%;
+  font-weight: bold;
+}
+.items-container{
+    text-align: left;
+}
+
+.row2{
+  margin: 10px 3px;
+  font-weight: bold;
+}
+.button2{
+  min-width: 80px;
+  float: left;
+  font-weight: bold;
+}
+
+.date1{
+  margin-top: 2.3px;
+}
+.wel{
+  font-weight: bold;
+  font-size: 25px;
+  margin-top: 25px;
+}
+.edit{
+float: right;
+padding: 5px 25px;
+margin: 2px;
+border-radius: 5px;
+color: azure;
+border: transparent;
+background-color: rgb(39, 154, 255);
+}
+.edit:hover{
+  background-color: rgb(80, 47, 47);
+}
+.clr{
+  text-align: center;
+}
+.clearbutton{
+  align-items: center;
+  margin: 20px;
+  font-weight: bolder;
+  border: transparent;
+  padding: 3px 7px;
+  background-color: rgb(0, 83, 184);
+  color: rgb(255, 255, 255);
+  border-radius: 5px;
+}
+.clearbutton:hover{
+  background-color: rgb(60, 60, 79);
+}
+.save{
+  align-items: center;
+  margin: 0px;
+  font-weight: bolder;
+  border: transparent;
+  padding: 3px 7px;
+  background-color: rgb(0, 122, 77);
+  color: rgb(255, 255, 255);
+  border-radius: 5px;
+  float: left;
+}
+.save:hover{
+  background-color: rgb(60, 60, 79);
+}
