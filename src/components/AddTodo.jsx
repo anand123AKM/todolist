@@ -45,7 +45,7 @@ const AddTodo = ({ onclick }) => {
         <div className="col-2 btn3">
           <button
             type="button"
-            className="btn btn-success button2"
+            className="button3 btn-primary button2"
             onClick={handleAddButtonClick}
           >
             <MdAddComment />

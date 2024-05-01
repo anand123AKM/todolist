@@ -58,6 +58,7 @@
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
+  font-weight: bold;
   border-radius: 20px;
   border: 2px solid #ffffff;
 }
@@ -126,6 +127,7 @@
       text-decoration: none;
       font-size: 16px;
       margin: 4px 2px;
+      font-weight: bold;
       cursor: pointer;
       border-radius: 20px;
       width: 200px;
@@ -133,8 +135,22 @@
     }
   
     .button2 {
-      width: 7vw;
+      width: 11vw;
       height: 40px;
+    }
+    .button3{
+      background-color: #0f12c6;
+        color: white;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        font-weight: bold;
+        border-radius: 15px;
+        border: 2px solid #ffffff;
     }
 
     .inpdiv {
@@ -192,7 +208,7 @@
  width: 40vw;
 }
 .td{
-  margin-right: 17%;
+  margin-right: 13%;
 }
 .ta{
   margin-right: 17%;
@@ -202,8 +218,8 @@
   height: 40px;
 }
 .btn3{
- margin-right: 15%;
- padding-bottom: 25px;
+ margin-right: 8%;
+ padding-bottom: 60px;
 }
 .edbtn{
   margin-right: 2%;
