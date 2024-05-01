@@ -20,8 +20,9 @@ const AddTodo = ({ onclick }) => {
   return (
     <div className="container text-center">
       <div className="row row2">
-        <div className="col-6">
+        <div className="col-6 ta">
           <input
+          className="todoadd"
             type="text"
             placeholder="Enter Todo Here"
             value={todoName}
@@ -29,10 +30,11 @@ const AddTodo = ({ onclick }) => {
             onChange={handleNameChange}
           />
         </div>
-        <div className="col-4">
+        <div className="col-4 td">
           <input
-            className="date1"
-            type="date"
+            className="tododateadd"
+           
+            placeholder="Due Date"
             name=""
             id=""
             required
@@ -40,7 +42,7 @@ const AddTodo = ({ onclick }) => {
             onChange={handleDateChange}
           />
         </div>
-        <div className="col-2">
+        <div className="col-2 btn3">
           <button
             type="button"
             className="btn btn-success button2"
@@ -50,6 +52,7 @@ const AddTodo = ({ onclick }) => {
           </button>
         </div>
       </div>
+       <div className="pen">Pending Task</div>
     </div>
   );
 };

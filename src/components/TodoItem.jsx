@@ -18,11 +18,12 @@ const TodoItem = ({
   };
 
   return (
-    <div className="container">
-      <div className="row row2">
-        <div className="col-4">
+    <div className="container container2">
+      <div className="row row3">
+        <div style={{color:"white", fontWeight:"bold", fontSize:"larger" }} className="col-4 addin">
           {isEditing ? (
-            <input
+            <input 
+            className="inpdiv"
               type="text"
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
@@ -31,10 +32,11 @@ const TodoItem = ({
             todoName
           )}
         </div>
-        <div className="col-4">
+        <div style={{color:"white", fontWeight:"bold" , fontSize:"larger" }} className="col-4 addd">
           {isEditing ? (
             <input
-              type="date"
+             className="inpdiv"
+              type="text"
               value={editedDate}
               onChange={(e) => setEditedDate(e.target.value)}
             />
@@ -42,7 +44,8 @@ const TodoItem = ({
             toDate
           )}
         </div>
-        <div className="col-2 ">
+        <div className="bse" >
+        <div className="col-2 edbtn">
           {isEditing ? (
             <button className="save" onClick={handleSaveEdit} type="button">
               Save
@@ -57,7 +60,7 @@ const TodoItem = ({
             </button>
           )}
         </div>
-        <div className="col-2">
+        <div className="col-2 dlbtn">
           <button
             type="button"
             onClick={() => onDeleteClick(todoName)}
@@ -65,7 +68,7 @@ const TodoItem = ({
           >
             <MdDelete />
           </button>
-        </div>
+        </div></div>
       </div>
     </div>
   );

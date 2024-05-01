@@ -6,6 +6,8 @@ import Todoitm from "./components/Todoitm";
 import { WelcomeMsg } from "./components/WelcomeMsg";
 import { useState } from "react";
 import { useEffect } from "react";
+import Info from "./components/info";
+import Footer from "./components/footer";
 
 const App = () => {
   const initialMenuApi = JSON.parse(localStorage.getItem("todoItems")) || [];
@@ -54,8 +56,11 @@ const App = () => {
   };
 
   return (
-    <center className="todo-container">
+    <>
+    <div className="maindiv" >
+      <center className="todo-container">
       <AppName></AppName>
+      <Info></Info>
       <AddTodo onclick={onNewItem}></AddTodo>
       {MenuApi.length === 0 && <WelcomeMsg></WelcomeMsg>}
       <Todoitm
@@ -65,12 +70,15 @@ const App = () => {
         onSaveEdit={handleSaveEdit}
         editingItem={editingItem}
       ></Todoitm>
-      <div className="clr">
+      <div className="clear">
         <button onClick={clearall} className="clearbutton">
           CLEAR LIST
         </button>
       </div>
+       <div className="foot21">  <Footer></Footer></div>
     </center>
+    </div>
+     </>
   );
 };
 
