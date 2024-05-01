@@ -196,7 +196,7 @@
 
 @media screen and (max-width:700px) {
   .maindiv {
-      background-image: url("./images/smbg.jpg");
+          background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("./images/gdp.jpeg");
     }
   .row2{
     display: flex;
