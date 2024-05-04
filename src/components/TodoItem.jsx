@@ -3,8 +3,9 @@ import { MdDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 
 const TodoItem = ({
-  todoName,
+    todoName,
   toDate,
+  id,
   onDeleteClick,
   onEditClick,
   onSaveEdit,
@@ -14,12 +15,15 @@ const TodoItem = ({
   const [editedDate, setEditedDate] = useState(toDate);
 
   const handleSaveEdit = () => {
-    onSaveEdit(editedName, editedDate);
+    onSaveEdit(editedName, editedDate,id);
   };
 
   return (
     <div className="container container2">
       <div className="row row3">
+        <div className="col-2 sno1">
+          {id}.
+        </div>
         <div style={{color:"white", fontWeight:"bold", fontSize:"larger" }} className="col-4 addin">
           {isEditing ? (
             <input 

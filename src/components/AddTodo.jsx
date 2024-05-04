@@ -11,14 +11,25 @@ const AddTodo = ({ onclick }) => {
   const handleDateChange = (event) => {
     settodoDueDate(event.target.value);
   };
-  const handleAddButtonClick = () => {
-    onclick(todoName, todoDueDate);
-    settodoDueDate("");
-    settodoName("");
+  const [id, setid] = useState("");
+  const handlesnum = (event) => {
+    setid(event.target.value);
   };
+ 
+const handleAddButtonClick = () => {
+  onclick( todoName, todoDueDate,id );
+  settodoDueDate("");
+  settodoName("");
+  setid("");
+};
+
 
   return (
     <div className="container text-center">
+          <div className="sno">
+<input type="number" placeholder="input s. no." className="snoinp" value={id} required onChange={handlesnum}  />
+<h3 className="snin" >𝗔𝗱𝗱 𝘂𝗽 𝘁𝗼 5 𝗧𝗮𝘀𝗸 𝗽𝗲𝗿 𝗱𝗮𝘆</h3>
+        </div>
       <div className="row row2">
         <div className="col-6 ta">
           <input
@@ -33,7 +44,7 @@ const AddTodo = ({ onclick }) => {
         <div className="col-4 td">
           <input
             className="tododateadd"
-           
+            type="date"
             placeholder="Due Date"
             name=""
             id=""

@@ -16,6 +16,7 @@ const Todoitm = ({
             key={item.name}
             todoName={item.name}
             toDate={item.dueDate}
+            id = {item.id}
             onDeleteClick={onDeleteClick}
             onEditClick={onEditClick}
             onSaveEdit={onSaveEdit}
