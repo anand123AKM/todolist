@@ -10,8 +10,10 @@ import Info from "./components/info";
 import Footer from "./components/footer";
 import { AuthContext } from "./components/AuthContext";
 import Login from "./components/log";
+import { UserContext } from "./components/UserContext";
 
 const App = () => {
+  const [userId, setUserId] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const initialMenuApi = JSON.parse(localStorage.getItem("todoItems")) || [];
   let [MenuApi, setmenuApi] = useState(initialMenuApi);
@@ -130,39 +132,41 @@ const App = () => {
 
   return (
     <>
-      <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
-        <div className={`main-div`}>
-          {isLoggedIn ? (
-            <div className="maindiv">
-              <center className="todo-container">
-                <AppName></AppName>
-                <Info></Info>
-                <AddTodo onclick={onNewItem}></AddTodo>
-                {MenuApi.length === 0 && <WelcomeMsg></WelcomeMsg>}
-                <Todoitm
-                  todo={MenuApi}
-                  onEditClick={handleEditItem}
-                  onDeleteClick={handledeleteitem}
-                  onSaveEdit={handleSaveEdit}
-                  editingItem={editingItem}
-                ></Todoitm>
-                <div className="clear">
-                  <button onClick={clearall} className="clearbutton">
-                    CLEAR LIST
-                  </button>
-                </div>
-                <div className="foot21">
-                  <Footer></Footer>
-                </div>
-              </center>
-            </div>
-          ) : (
-            <div className="log">
-              <Login />
-            </div>
-          )}
-        </div>
-      </AuthContext.Provider>
+      <UserContext.Provider value={{ userId, setUserId }}>
+        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+          <div className={`main-div`}>
+            {isLoggedIn ? (
+              <div className="maindiv">
+                <center className="todo-container">
+                  <AppName></AppName>
+                  <Info></Info>
+                  <AddTodo setUserId={setUserId} onclick={onNewItem}></AddTodo>
+                  {MenuApi.length === 0 && <WelcomeMsg></WelcomeMsg>}
+                  <Todoitm
+                    todo={MenuApi}
+                    onEditClick={handleEditItem}
+                    onDeleteClick={handledeleteitem}
+                    onSaveEdit={handleSaveEdit}
+                    editingItem={editingItem}
+                  ></Todoitm>
+                  <div className="clear">
+                    <button onClick={clearall} className="clearbutton">
+                      CLEAR LIST
+                    </button>
+                  </div>
+                  <div className="foot21">
+                    <Footer></Footer>
+                  </div>
+                </center>
+              </div>
+            ) : (
+              <div className="log">
+                <Login />
+              </div>
+            )}
+          </div>
+        </AuthContext.Provider>
+      </UserContext.Provider>
     </>
   );
 };

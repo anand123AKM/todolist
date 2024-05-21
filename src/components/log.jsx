@@ -16,9 +16,13 @@ import {
 } from "firebase/auth";
 import { auth, db, collection, doc, setDoc } from "./firebase";
 import "../app.css";
+import { UserContext } from "./UserContext";
+import { setUserId } from "firebase/analytics";
 
 export default function Login({ theme }) {
+  const { setUserId } = useContext(UserContext);
   const { setIsLoggedIn } = useContext(AuthContext);
+  const [otpSent, setOtpSent] = useState(false);
 
   const [phone, setPhone] = useState("");
   const handleChange = (event) => {
@@ -53,6 +57,7 @@ export default function Login({ theme }) {
       .then((confirmationResult) => {
         window.confirmationResult = confirmationResult;
         console.log("OTP sent");
+        setOtpSent(true);
       })
       .catch((error) => {
         console.error("SMS not sent", error);
@@ -81,7 +86,7 @@ export default function Login({ theme }) {
         const userId = user.uid;
         console.log("User ID:", userId);
         setIsLoggedIn(true);
-
+        setUserId(userId);
         try {
           const usersCollection = collection(db, "users");
           const userDoc = doc(usersCollection, userId);
@@ -134,7 +139,7 @@ export default function Login({ theme }) {
                     size="sm"
                     onClick={onSignInSubmit}
                   >
-                    OTP
+                    OTP {otpSent && <span style={{ color: "green" }}>✔</span>}
                   </Button>
                 </InputRightElement>
               </InputGroup>
