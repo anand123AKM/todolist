@@ -316,3 +316,118 @@ margin-left: 10vw;
       display: none;
     }
 }
+
+
+
+
+/* --------------------------------------- */
+
+.form {
+  width: 60%;
+  margin: 0 auto;
+  padding: 20px;
+  margin-top: 15px;
+  border-radius: 10px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.inp {
+  margin-top: 15px;
+}
+
+.inp1 {
+  width: 100%;
+  border-radius: 5px;
+  height: 100px;
+  background-color: transparent;
+}
+.inp2 {
+  width: 100%;
+  border-radius: 5px;
+  height: 40px;
+  background-color: transparent;
+    border: 2px solid #ffffff;
+}
+.otp{
+  margin-top: 5px;
+  width: 100%;
+  border-radius: 5px;
+  height: 40px;
+background-color: white;
+    border: 2px solid #000000;
+color: #000;
+border-radius: 25px;
+margin-right: 8px;
+font-weight: bold;
+}
+
+.main-div {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  font-family: 'Poppins', sans-serif;
+  min-width: 100vw;
+  min-height: 100vh;
+  background: linear-gradient(to right,
+        rgb(52, 52, 53),
+        rgb(1, 1, 32));
+}
+.log{
+  margin-top: 60px;
+}
+.dark {
+  background: linear-gradient(to right,
+      rgb(52, 52, 53),
+      rgb(1, 1, 32));
+  color: white;
+}
+
+
+.inp1::placeholder {
+  text-align: left;
+  padding-top: 0;
+}
+
+
+.send1 {
+  text-align: center;
+    margin-top: 20px;
+}
+.send2{
+  color: #ffffff;
+  background-color: black;
+  padding: 8px 16px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 25px;
+  border: 2px solid #ffffff; 
+}
+
+@media screen and (min-width:800px) {
+  .form {
+    width: 30%;
+  }
+}
+
+
+.dark .inp1 {
+  border: 1px solid white;
+}
+
+
+.dark .inp1::placeholder {
+  color: white;
+}
+
+
+.contact {
+  margin-top: 15px;
+  font-size: 20px;
+  width: 170px;
+  font-weight: bold;
+  border-radius: 5px;
+  border: 1px solid;
+  text-align: center;
+}

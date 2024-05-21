@@ -13,6 +13,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
@@ -20,6 +23,8 @@
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "firebase": "^10.12.1",
+    "framer-motion": "^11.2.4",
     "hbs": "^4.2.0",
     "mysql2": "^3.9.7",
     "react": "^18.2.0",
