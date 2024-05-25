@@ -86,6 +86,7 @@ export default function Login({ theme }) {
         console.log("User ID:", userId);
         setIsLoggedIn(true);
         setUserId(userId);
+        localStorage.setItem("isLoggedIn", "true");
         try {
           const usersCollection = collection(db, "users");
           const userDoc = doc(usersCollection, userId);
@@ -111,7 +112,7 @@ export default function Login({ theme }) {
                 Login
               </h1>
             </Center>
-            <FormLabel className="inp">Name</FormLabel>
+            <FormLabel className="inp">First Name</FormLabel>
             <Input
               className={`dark inp2`}
               type="text"
