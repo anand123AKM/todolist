@@ -3,6 +3,7 @@ import AppName from "./components/AppName";
 import AddTodo from "./components/AddTodo";
 import "./app.css";
 import Todoitm from "./components/Todoitm";
+import { NameContext } from "./components/NameContext";
 import { WelcomeMsg } from "./components/WelcomeMsg";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -11,13 +12,41 @@ import Footer from "./components/footer";
 import { AuthContext } from "./components/AuthContext";
 import Login from "./components/log";
 import { UserContext } from "./components/UserContext";
+import { auth, db, collection, doc } from "./components/firebase";
+import { getDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
 const App = () => {
+  const [name, setName] = useState("");
   const [userId, setUserId] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const initialMenuApi = JSON.parse(localStorage.getItem("todoItems")) || [];
   let [MenuApi, setmenuApi] = useState(initialMenuApi);
   const [editingItem, setEditingItem] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+        setUserId(user.uid);
+
+        const usersCollection = collection(db, "users");
+        const userDoc = doc(usersCollection, user.uid);
+        const userDocSnap = await getDoc(userDoc);
+
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          setName(userData.name);
+        }
+      } else {
+        setIsLoggedIn(false);
+        setUserId(null);
+        setName("");
+      }
+    });
+
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     fetch("http://localhost:3000/todos", {
@@ -132,41 +161,46 @@ const App = () => {
 
   return (
     <>
-      <UserContext.Provider value={{ userId, setUserId }}>
-        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
-          <div className={`main-div`}>
-            {isLoggedIn ? (
-              <div className="maindiv">
-                <center className="todo-container">
-                  <AppName></AppName>
-                  <Info></Info>
-                  <AddTodo setUserId={setUserId} onclick={onNewItem}></AddTodo>
-                  {MenuApi.length === 0 && <WelcomeMsg></WelcomeMsg>}
-                  <Todoitm
-                    todo={MenuApi}
-                    onEditClick={handleEditItem}
-                    onDeleteClick={handledeleteitem}
-                    onSaveEdit={handleSaveEdit}
-                    editingItem={editingItem}
-                  ></Todoitm>
-                  <div className="clear">
-                    <button onClick={clearall} className="clearbutton">
-                      CLEAR LIST
-                    </button>
-                  </div>
-                  <div className="foot21">
-                    <Footer></Footer>
-                  </div>
-                </center>
-              </div>
-            ) : (
-              <div className="log">
-                <Login />
-              </div>
-            )}
-          </div>
-        </AuthContext.Provider>
-      </UserContext.Provider>
+      <NameContext.Provider value={name}>
+        <UserContext.Provider value={{ userId, setUserId }}>
+          <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+            <div className={`main-div`}>
+              {isLoggedIn ? (
+                <div className="maindiv">
+                  <center className="todo-container">
+                    <AppName></AppName>
+                    <Info></Info>
+                    <AddTodo
+                      setUserId={setUserId}
+                      onclick={onNewItem}
+                    ></AddTodo>
+                    <Todoitm
+                      userId={userId}
+                      todo={MenuApi}
+                      onEditClick={handleEditItem}
+                      onDeleteClick={handledeleteitem}
+                      onSaveEdit={handleSaveEdit}
+                      editingItem={editingItem}
+                    ></Todoitm>
+                    <div className="clear">
+                      <button onClick={clearall} className="clearbutton">
+                        CLEAR LIST
+                      </button>
+                    </div>
+                    <div className="foot21">
+                      <Footer></Footer>
+                    </div>
+                  </center>
+                </div>
+              ) : (
+                <div className="log">
+                  <Login />
+                </div>
+              )}
+            </div>
+          </AuthContext.Provider>
+        </UserContext.Provider>
+      </NameContext.Provider>
     </>
   );
 };

@@ -1,7 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { MdAddComment } from "react-icons/md";
 import { UserContext } from "./UserContext";
-import { auth, db, collection, doc, setDoc } from "./firebase";
+import { db, collection, doc, setDoc } from "./firebase";
 
 const AddTodo = ({ onclick }) => {
   const { userId } = useContext(UserContext);
@@ -43,7 +43,7 @@ const AddTodo = ({ onclick }) => {
           required
           onChange={handlesnum}
         />
-        <h3 className="snin">𝗔𝗱𝗱 𝘂𝗽 𝘁𝗼 5 𝗧𝗮𝘀𝗸 𝗽𝗲𝗿 𝗱𝗮𝘆</h3>
+        <h3 className="snin">add upto 5 task</h3>
       </div>
       <div className="row row2">
         <div className="col-6 ta">

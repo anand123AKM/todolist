@@ -17,7 +17,6 @@ import {
 import { auth, db, collection, doc, setDoc } from "./firebase";
 import "../app.css";
 import { UserContext } from "./UserContext";
-import { setUserId } from "firebase/analytics";
 
 export default function Login({ theme }) {
   const { setUserId } = useContext(UserContext);
