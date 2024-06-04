@@ -90,6 +90,8 @@
   cursor: pointer;
 }
 
+
+
 .edit {
   background-color: #4CAF50;
   border: none;
@@ -101,10 +103,15 @@
   font-size: 16px;
   font-weight: bold;
   border-radius: 10px;
-  margin: 4px 2px;
+  /* margin: 4px 2px; */
   width: 80px;
   cursor: pointer;
 }
+
+.edit{
+  display: none;
+}
+
   .todoadd {
       background-color: #ffffff;
       color: rgb(103, 0, 0);
@@ -136,8 +143,15 @@
     }
   
     .button2 {
-      width: 11vw;
+      width: 8vw;
       height: 40px;
+      margin-left: 25px;
+    }
+    @media screen and (min-width: 700px) {
+      .button2 {
+       margin-left: 150px;
+      }
+      
     }
     .button3{
       background-color: #0f12c6;

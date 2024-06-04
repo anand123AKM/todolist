@@ -1,20 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
+import { collection, deleteDoc } from "firebase/firestore";
+import { db } from "./firebase";
+import { getDocs, getDoc } from "firebase/firestore";
+import { doc } from "firebase/firestore";
 
 const TodoItem = ({
+  userId,
   todoName,
   toDate,
   id,
-  onDeleteClick,
   onEditClick,
   onSaveEdit,
   isEditing,
 }) => {
+  console.log("TodoItem", id, todoName);
   const [editedName, setEditedName] = useState(todoName);
   const [editedDate, setEditedDate] = useState(toDate);
 
-  const handleSaveEdit = () => {
+  const handleDelete = async () => {
+    try {
+      const querySnapshot = await getDocs(
+        collection(db, "users", userId, "todos")
+      );
+      querySnapshot.forEach(async (document) => {
+        const docid = document.id;
+        const task = document.data().task;
+        console.log(`Document ID: ` + docid);
+        console.log(`Task: ` + task);
+        console.log(`Todo Name: ` + todoName);
+
+        if (task === todoName) {
+          try {
+            const todoRef = doc(db, "users", userId, "todos", docid);
+            await deleteDoc(todoRef);
+            console.log("Document successfully deleted!");
+          } catch (e) {
+            console.error("Error deleting document: ", e);
+          }
+        }
+      });
+    } catch (e) {
+      console.error("Error getting documents: ", e);
+    }
+  };
+
+  const handleSaveEdit = async () => {
     onSaveEdit(editedName, editedDate, id);
   };
 
@@ -53,6 +85,17 @@ const TodoItem = ({
           )}
         </div>
         <div className="bse">
+          <div className="col-2 dlbtn">
+            <button
+              type="button"
+              onClick={() => {
+                handleDelete();
+              }}
+              className="btn btn-danger button2"
+            >
+              <MdDelete />
+            </button>
+          </div>
           <div className="col-2 edbtn">
             {isEditing ? (
               <button className="save" onClick={handleSaveEdit} type="button">
@@ -67,15 +110,6 @@ const TodoItem = ({
                 <FaRegEdit />
               </button>
             )}
-          </div>
-          <div className="col-2 dlbtn">
-            <button
-              type="button"
-              onClick={() => onDeleteClick(todoName)}
-              className="btn btn-danger button2"
-            >
-              <MdDelete />
-            </button>
           </div>
         </div>
       </div>

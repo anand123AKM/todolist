@@ -3,9 +3,9 @@ import TodoItem from "./TodoItem";
 import { collection, getDocs, doc } from "firebase/firestore";
 import { db } from "./firebase";
 import { useState, useEffect } from "react";
+import { query, where } from "firebase/firestore";
 
 const Todoitm = ({
-  // todo,
   userId,
   onDeleteClick,
   onEditClick,
@@ -13,6 +13,28 @@ const Todoitm = ({
   editingItem,
 }) => {
   const [todos, setTodos] = useState([]);
+
+  const fetchTodos = async () => {
+    const q = query(
+      collection(db, "users", userId, "todos"),
+      where("completed", "==", false)
+    );
+    const querySnapshot = await getDocs(q);
+    const todos = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    console.log(todos.id);
+    return todos;
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const todos = await fetchTodos();
+      setTodos(todos);
+    };
+
+    fetchData();
+  }, [userId]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,6 +60,7 @@ const Todoitm = ({
       <div className="items-container">
         {todos.map((item) => (
           <TodoItem
+            userId={userId}
             key={item.name}
             todoName={item.name}
             toDate={item.date}
@@ -45,7 +68,7 @@ const Todoitm = ({
             onDeleteClick={onDeleteClick}
             onEditClick={onEditClick}
             onSaveEdit={onSaveEdit}
-            isEditing={item === editingItem}
+            isEditing={item.name === editingItem}
           />
         ))}
       </div>

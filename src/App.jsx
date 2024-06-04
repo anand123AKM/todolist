@@ -4,7 +4,6 @@ import AddTodo from "./components/AddTodo";
 import "./app.css";
 import Todoitm from "./components/Todoitm";
 import { NameContext } from "./components/NameContext";
-import { WelcomeMsg } from "./components/WelcomeMsg";
 import { useState } from "react";
 import { useEffect } from "react";
 import Info from "./components/info";
@@ -13,7 +12,7 @@ import { AuthContext } from "./components/AuthContext";
 import Login from "./components/log";
 import { UserContext } from "./components/UserContext";
 import { auth, db, collection, doc } from "./components/firebase";
-import { getDoc } from "firebase/firestore";
+import { getDoc, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 const App = () => {
@@ -117,9 +116,29 @@ const App = () => {
     const newNmenu = [];
     setmenuApi(newNmenu);
   }
-  const handleEditItem = (todoItemName) => {
-    const itemToEdit = MenuApi.find((item) => item.name === todoItemName);
-    setEditingItem(itemToEdit);
+
+  const handleEditItem = async (todoItemName) => {
+    try {
+      const querySnapshot = await getDocs(
+        collection(db, "users", userId, "todos")
+      );
+      querySnapshot.forEach((doc) => {
+        const docid = doc.id;
+        console.log(`Document ID: ` + docid);
+        console.log(JSON.stringify(todoItemName));
+        const docname = JSON.stringify(doc.data().task);
+        console.log(`Document data:` + docname);
+        if (docname === todoItemName) {
+          const itemToEdit = MenuApi.find(() => docname === todoItemName);
+          console.log("Item to edit:", itemToEdit);
+          setEditingItem(itemToEdit);
+        } else {
+          console.log("Item not found");
+        }
+      });
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   const handleSaveEdit = (updatedName, updatedDueDate, id) => {
