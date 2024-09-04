@@ -85,12 +85,7 @@ const AddTodo = ({ onclick }) => {
           </button>
         </div>
       </div>
-      <div className="pen">
-        Pending Task -
-        <p style={{ marginLeft: "10px", marginTop: "8px", fontSize: "15px" }}>
-          refresh after every Action
-        </p>
-      </div>
+      <div className="pen">Pending Task </div>
     </div>
   );
 };

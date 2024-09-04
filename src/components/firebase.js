@@ -3,12 +3,13 @@ import { getAuth } from "firebase/auth";
 import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCqHJZXLdJHlxDV8t9pRIA_tOn7oreUCM0",
-  authDomain: "car-racing-57ff4.firebaseapp.com",
-  projectId: "car-racing-57ff4",
-  storageBucket: "car-racing-57ff4.appspot.com",
-  messagingSenderId: "592006086642",
-  appId: "1:592006086642:web:6620d741b227943202356b",
+  apiKey: "AIzaSyDeQOvd9koEo56dH2cfy5fTkE6D_1PzOT4",
+  authDomain: "todo-f4083.firebaseapp.com",
+  projectId: "todo-f4083",
+  storageBucket: "todo-f4083.appspot.com",
+  messagingSenderId: "763604147119",
+  appId: "1:763604147119:web:da75b92d0253e64aa4ed5a",
+  measurementId: "G-82LC44WMGT",
 };
 
 const app = initializeApp(firebaseConfig);
