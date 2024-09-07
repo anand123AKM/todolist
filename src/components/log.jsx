@@ -1,176 +1,179 @@
-import React, { useState, useContext } from "react";
-import { AuthContext } from "./AuthContext";
+import React, { useState, useEffect, useContext } from "react";
 import {
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  Center,
-  InputGroup,
-  InputRightElement,
-} from "@chakra-ui/react";
-import {
-  getAuth,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
-import { auth, db, collection, doc, setDoc } from "./firebase";
+import { auth, db } from "./firebase";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { Center, FormLabel, Input, Button } from "@chakra-ui/react";
 import "../app.css";
-import { UserContext } from "./UserContext";
 
-export default function Login({ theme }) {
-  const { setUserId } = useContext(UserContext);
-  const { setIsLoggedIn } = useContext(AuthContext);
-  const [otpSent, setOtpSent] = useState(false);
-
-  const [phone, setPhone] = useState("");
-  const handleChange = (event) => {
-    setPhone(event.target.value);
-  };
-
+const Login = ({ theme }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [error, setError] = useState("");
   const [name, setName] = useState("");
-  const handleChangeName = (event) => {
-    setName(event.target.value);
-  };
 
-  const captcha = () => {
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, "sign-in-button", {
-      size: "invisible",
-      callback: (response) => {
-        this.onSignInSubmit();
-        console.log("recaptcha verified");
-      },
-      defaultCountry: "IN",
-    });
-  };
-
-  const onSignInSubmit = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    captcha();
-    const phoneNumber = "+91" + phone;
-    console.log(phoneNumber);
-    const appVerifier = window.recaptchaVerifier;
-
-    const auth = getAuth();
-    signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-      .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
-        console.log("OTP sent");
-        setOtpSent(true);
-      })
-      .catch((error) => {
-        console.error("SMS not sent", error);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("User registered:", userCredential.user);
+      await updateProfile(userCredential.user, {
+        displayName: name,
       });
-  };
+      const userId = userCredential.user.uid;
+      await setDoc(doc(db, "users", userId), {
+        name: name,
+        email: email,
+      });
+      console.log("User profile document successfully created!");
 
-  const [code, setCode] = useState("");
-
-  const handleChangeCode = (event) => {
-    setCode(event.target.value);
-  };
-
-  const SubmitOTP = () => {
-    if (!window.confirmationResult) {
-      console.error("Confirmation result is not set");
-      return;
-    } else {
-      console.log("verified user");
+      localStorage.setItem("userData", JSON.stringify(userCredential.user));
+    } catch (error) {
+      setError(error.message);
+      console.error("Error signing up:", error);
     }
-
-    window.confirmationResult
-      .confirm(code)
-      .then(async (result) => {
-        const user = result.user;
-        console.log(user);
-        const userId = user.uid;
-        console.log("User ID:", userId);
-        setIsLoggedIn(true);
-        setUserId(userId);
-        localStorage.setItem("isLoggedIn", "true");
-        try {
-          const usersCollection = collection(db, "users");
-          const userDoc = doc(usersCollection, userId);
-          await setDoc(userDoc, { name: name });
-          console.log("User profile document successfully created!");
-        } catch (error) {
-          console.error("Error creating user profile document: ", error);
-        }
-      })
-      .catch((error) => {
-        console.error("Error confirming OTP", error);
-      });
   };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("User signed in:", userCredential.user);
+      localStorage.setItem("userData", JSON.stringify(userCredential.user));
+    } catch (error) {
+      setError(error.message);
+      console.error("Error logging in:", error);
+    }
+  };
+
+  useEffect(() => {
+    const userData = localStorage.getItem("userData");
+
+    if (userData) {
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      try {
+        const userDocRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setStoredName(user.displayName);
+          nameValue(user.displayName);
+          console.log("User data fetched successfully:", userData);
+        } else {
+          console.log("No such document!");
+          setStoredName(user.displayName);
+        }
+      } catch (error) {
+        console.error("Error fetching user data: ", error);
+      }
+    };
+
+    fetchUserData();
+  }, [auth.currentUser]);
 
   return (
-    <>
-      <Center>
-        <div className={`dark form`}>
-          <FormControl isRequired>
-            <div id="sign-in-button"></div>
-            <Center>
-              <h1 variant="outline" mt={8} className={`dark contact`}>
-                Login
-              </h1>
-            </Center>
-            <FormLabel className="inp">First Name</FormLabel>
-            <Input
-              className={`dark inp2`}
-              type="text"
-              name="name"
-              placeholder="Name"
-              color={"white"}
-              onChange={handleChangeName}
-            />
-            <>
-              <FormLabel className="inp">Phone</FormLabel>
-              <InputGroup>
+    <Center>
+      <div className={`${theme} form`}>
+        <Center>
+          <h1 variant="outline" mt={8} className={`${theme} contact`}>
+            {isRegistering ? "Sign Up" : "Login"}
+          </h1>
+        </Center>
+        <form onSubmit={isRegistering ? handleSignUp : handleLogin}>
+          <div>
+            {isRegistering ? (
+              <>
+                <FormLabel className="inp">Name</FormLabel>
                 <Input
-                  className={`dark inp2`}
-                  type="tel"
-                  name="phone"
-                  placeholder="phone no."
-                  color={"white"}
-                  onChange={handleChange}
+                  className={`${theme} inp2`}
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
                 />
-                <InputRightElement width="4.5rem">
-                  <Button
-                    className="otp"
-                    h="1.75rem"
-                    size="sm"
-                    onClick={onSignInSubmit}
-                  >
-                    OTP {otpSent && <span style={{ color: "green" }}>✔</span>}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-            </>
-            <FormLabel className="inp">OTP</FormLabel>
+              </>
+            ) : null}
+          </div>
+          <div>
+            <FormLabel className="inp">Email </FormLabel>
             <Input
-              className={`dark inp2`}
-              type="number"
-              name="otp"
-              placeholder="OTP"
-              color={"white"}
-              value={code}
-              onChange={handleChangeCode}
+              className={`${theme} inp2`}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
-
-            <div className={`${theme} send1`}>
-              <Button
-                className={`${theme} send2`}
-                variant="outline"
-                width="100px"
-                mt={8}
-                color={"white"}
-                size="lg"
-                onClick={SubmitOTP}
+          </div>
+          <div>
+            <FormLabel className="inp">Password</FormLabel>
+            <Input
+              className={`${theme} inp2`}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className={`${theme} send1`}>
+            <Button
+              id="verify-otp"
+              className={`${theme} send2`}
+              variant="outline"
+              width="100px"
+              mt={8}
+              color={"white"}
+              size="lg"
+              type="submit"
+            >
+              {isRegistering ? "Sign Up" : "Login"}
+            </Button>
+            {error && (
+              <p
+                style={{ fontWeight: "bold", marginTop: "10px", color: "red" }}
               >
-                Login
-              </Button>
-            </div>
-          </FormControl>
+                {error}
+              </p>
+            )}
+          </div>
+        </form>
+        <div className="mess">
+          <button onClick={() => setIsRegistering(!isRegistering)}>
+            {isRegistering ? (
+              <>
+                Already have an account?{" "}
+                <span style={{ fontWeight: "bold" }}>Login</span>
+              </>
+            ) : (
+              <>
+                Don’t have an account?{" "}
+                <span style={{ fontWeight: "bold" }}>Sign Up</span>
+              </>
+            )}
+          </button>
         </div>
-      </Center>
-    </>
+      </div>
+    </Center>
   );
-}
+};
+
+export default Login;

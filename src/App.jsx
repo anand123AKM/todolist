@@ -11,8 +11,7 @@ import Footer from "./components/footer";
 import { AuthContext } from "./components/AuthContext";
 import Login from "./components/log";
 import { UserContext } from "./components/UserContext";
-import { auth, db, collection, doc } from "./components/firebase";
-import { getDoc, getDocs } from "firebase/firestore";
+import { auth } from "./components/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 const App = () => {
@@ -28,15 +27,6 @@ const App = () => {
       if (user) {
         setIsLoggedIn(true);
         setUserId(user.uid);
-
-        const usersCollection = collection(db, "users");
-        const userDoc = doc(usersCollection, user.uid);
-        const userDocSnap = await getDoc(userDoc);
-
-        if (userDocSnap.exists()) {
-          const userData = userDocSnap.data();
-          setName(userData.name);
-        }
       } else {
         setIsLoggedIn(false);
         setUserId(null);
@@ -47,44 +37,7 @@ const App = () => {
     return unsubscribe;
   }, []);
 
-  useEffect(() => {
-    fetch("http://localhost:3000/todos", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const newMenuApi = data.results.map((item) => {
-          const date = new Date(item.date);
-          const formattedDate = `${("0" + date.getDate()).slice(-2)}-${(
-            "0" +
-            (date.getMonth() + 1)
-          ).slice(-2)}-${date.getFullYear()}`;
-          return {
-            name: item.todo,
-            dueDate: formattedDate,
-            id: item.id,
-          };
-        });
-        setmenuApi(newMenuApi);
-      })
-      .catch((error) => console.error("Error:", error));
-  }, []);
-
   const onNewItem = (itemName, itemDueDate, id) => {
-    fetch("http://localhost:3000/todos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ todo: itemName, date: itemDueDate, id: id }),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error("Error:", error));
-
     if (!id) {
       alert("PLEASE FILL THE ID");
     } else if (!itemName) {
@@ -98,85 +51,43 @@ const App = () => {
     }
   };
 
-  const handledeleteitem = (todoitemname) => {
-    fetch("http://localhost:3000/todos", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ todo: todoitemname }),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error("Error:", error));
-    const newTodoitems = MenuApi.filter((item) => item.name !== todoitemname);
-    setmenuApi(newTodoitems);
+  const handledeleteitem = (itemName) => {
+    const newMenuApi = MenuApi.filter((item) => item.name !== itemName);
+    setmenuApi(newMenuApi);
   };
+
   function clearall() {
     const newNmenu = [];
     setmenuApi(newNmenu);
   }
 
-  const handleEditItem = async (todoItemName) => {
-    try {
-      const querySnapshot = await getDocs(
-        collection(db, "users", userId, "todos")
-      );
-      querySnapshot.forEach((doc) => {
-        const docid = doc.id;
-        console.log(`Document ID: ` + docid);
-        console.log(JSON.stringify(todoItemName));
-        const docname = JSON.stringify(doc.data().task);
-        console.log(`Document data:` + docname);
-        if (docname === todoItemName) {
-          const itemToEdit = MenuApi.find(() => docname === todoItemName);
-          console.log("Item to edit:", itemToEdit);
-          setEditingItem(itemToEdit);
-        } else {
-          console.log("Item not found");
-        }
-      });
-    } catch (error) {
-      console.error("Error:", error);
-    }
+  const [editingName, setEditingName] = useState("");
+  const [editingDueDate, setEditingDueDate] = useState("");
+  const handleEditItem = async (AddTodo, todoDate) => {
+    setEditingItem(AddTodo);
+    setEditingName(AddTodo);
+    setEditingDueDate(todoDate);
   };
 
-  const handleSaveEdit = (updatedName, updatedDueDate, id) => {
-    fetch("http://localhost:3000/todos", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ todo: updatedName, date: updatedDueDate, id: id }),
-    })
-      .then(() => {
-        return fetch("http://localhost:3000/todos");
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        const newMenuApi = data.results.map((item) => {
-          const date = new Date(item.date);
-          const formattedDate = `${("0" + date.getDate()).slice(-2)}-${(
-            "0" +
-            (date.getMonth() + 1)
-          ).slice(-2)}-${date.getFullYear()}`;
-          return {
-            name: item.todo,
-            dueDate: formattedDate,
-            id: item.id,
-          };
-        });
-        setmenuApi(newMenuApi);
-      });
+  const handleSaveEdit = (todoname, toDate, id) => {
+    console.log("name", todoname);
+    console.log("date", toDate);
+    console.log("id", id);
     const updatedMenuApi = MenuApi.map((item) => {
-      if (item === editingItem) {
-        return { ...item, name: updatedName, dueDate: updatedDueDate };
+      if (item.name === editingName) {
+        return { ...item, name: todoname, dueDate: toDate };
       }
       return item;
     });
     setmenuApi(updatedMenuApi);
     setEditingItem(null);
   };
+  useEffect(() => {
+    localStorage.setItem("todoItems", JSON.stringify(MenuApi));
+    localStorage.setItem("editingItem", JSON.stringify(editingItem));
+    localStorage.setItem("editingName", editingName);
+    localStorage.setItem("editingDueDate", editingDueDate);
+  }, [MenuApi, editingItem, editingName, editingDueDate]);
 
   return (
     <>
