@@ -36,11 +36,21 @@
   color: white;
   text-align: center;
 }
+.sticky-footer h6{
+  color:rgb(122, 138, 153);
+  margin: 0;
+  padding: 5px;
+  font-size: 12px;
+}
 .link a{
-  color: white;
-  margin: 8px;
-  font-size: large;
+  color: rgb(76, 113, 148);
+  margin: 6px;
+  font-size: small;
   text-decoration: none;
+}
+.link a:hover{
+  color: rgb(255, 255, 255);
+  text-decoration: underline;
 }
 .welcome{
   color: white; 
