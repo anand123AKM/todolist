@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["/bgs.jpg"],
+      includeAssets: ["public/bgs.jpg"],
       manifest: {
         name: "Task Master",
         short_name: "Task Master",
@@ -17,12 +17,12 @@ export default defineConfig({
         theme_color: "#000000",
         icons: [
           {
-            src: "//bgs.jpg",
+            src: "public/bgs.jpg",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "//bgs.jpg",
+            src: "public/bgs.jpg",
             sizes: "512x512",
             type: "image/png",
             purpose: "any maskable",
