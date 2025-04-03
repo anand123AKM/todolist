@@ -477,4 +477,6 @@ color: white;
 
 .mess button{
   color: white;
+  border: none;
+  background-color:black;
 }
