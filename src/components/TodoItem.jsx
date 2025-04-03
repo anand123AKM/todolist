@@ -21,9 +21,14 @@ const TodoItem = ({
   return (
     <div className="container container2">
       <div className="row row3">
-        <div className="col-2 sno1">{id}.</div>
         <div
-          style={{ color: "white", fontWeight: "bold", fontSize: "larger" }}
+          style={{ color: "white", fontWeight: "bold", fontSize: "17px" }}
+          className="col-2 sno1"
+        >
+          {id}.
+        </div>
+        <div
+          style={{ color: "white", fontWeight: "bold", fontSize: "17px" }}
           className="col-4 addin"
         >
           {isEditing ? (
@@ -38,7 +43,7 @@ const TodoItem = ({
           )}
         </div>
         <div
-          style={{ color: "white", fontWeight: "bold", fontSize: "larger" }}
+          style={{ color: "white", fontWeight: "bold", fontSize: "17px" }}
           className="col-4 addd"
         >
           {isEditing ? (
